@@ -15,4 +15,5 @@ data/*.sqlite
 
 # 確保 src/ 下的快取也被忽略
 src/__pycache__/
+data/
 

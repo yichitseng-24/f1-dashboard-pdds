@@ -113,22 +113,43 @@ def create_summary_cards():
     # 傳入抓data的功能或是用現在已經有的數據來做
     # Card: real data should be from data_handler.py
     card_data = [ 
-        {"title": "race pace", "value": "95%", "color": "success"},
-        {"title": "instability", "value": "12 pts", "color": "warning"},
-        {"title": "points", "value": "上升", "color": "primary"},
+        {"title": "Season Points", "value": "95%", "color": "success"},
+        {"title": "Instability", "value": "12 pts", "color": "warning"},
+        {"title": "Race Pace", "value": "上升", "color": "primary"},
     ]
     cards = []
     for data in card_data:
         cards.append(
             dbc.Card(
-                dbc.CardBody([
-                    html.H5(data["title"], className="card-title"),
-                    html.P(data["value"], className=f"card-text text-{data['color']}", style={"fontSize": "2.5em"}),
-                ]),
-                #className="mb-3",
+                dbc.CardBody(
+                    html.Div(
+                        children=[
+                            html.H5(data["title"], 
+                                    className="card-text", 
+                                    style={
+                                        "fontSize": "1.4em",
+                                        "fontWeight": "700",
+                                        "marginBottom":"7px"
+                                    }
+                            ),
+                            html.P(data["value"], className=f"card-text text-{data['color']}", style={"fontSize": "2em",
+                                        "fontWeight": "700"}),
+                        ],
+                        
+                        #style={
+                        #     "display": "flex",
+                        #     "justifyContent": "space-between",
+                        #     "alignItems": "center",
+                        #     "width": "100%"
+                        #}
+                        
+                    )
+                ),
                 className='driver-summary-card',
-                style={"textAlign": "left",
-                    "marginBottom": "25px"}
+                style={
+                    "textAlign": "left",
+                    "marginBottom": "25px"
+                }
             )
         )
         

@@ -106,15 +106,15 @@ def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
         ]
     )
 
-# 3 Cards: Not Yet Finished
+# 3 Cards: Not Yet Finished!!
 def create_summary_cards():
     # To create right-side cards for Tab 4
     
     # Card: real data should be from data_handler.py
     card_data = [ 
-        {"title": "平均穩定度", "value": "95%", "color": "success"},
-        {"title": "最大波動", "value": "12 pts", "color": "warning"},
-        {"title": "季度趨勢", "value": "上升", "color": "primary"},
+        {"title": "race pace", "value": "95%", "color": "success"},
+        {"title": "instability", "value": "12 pts", "color": "warning"},
+        {"title": "points", "value": "上升", "color": "primary"},
     ]
     cards = []
     for data in card_data:

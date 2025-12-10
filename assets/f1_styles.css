@@ -324,6 +324,19 @@ body {
 }
 
 
+/* Card */
+.driver-summary-card {
+    width: 350px;
+    height: 120px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+
 
 /* Team Colors */
 .team-rbr {

@@ -109,7 +109,8 @@ def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
 # 3 Cards: Not Yet Finished!!
 def create_summary_cards():
     # To create right-side cards for Tab 4
-    
+    # 要有一個driver, year變數來裝現在選到的資料
+    # 傳入抓data的功能或是用現在已經有的數據來做
     # Card: real data should be from data_handler.py
     card_data = [ 
         {"title": "race pace", "value": "95%", "color": "success"},
@@ -124,14 +125,16 @@ def create_summary_cards():
                     html.H5(data["title"], className="card-title"),
                     html.P(data["value"], className=f"card-text text-{data['color']}", style={"fontSize": "2.5em"}),
                 ]),
-                className="mb-3",
-                style={"textAlign": "center"}
+                #className="mb-3",
+                className='driver-summary-card',
+                style={"textAlign": "left",
+                    "marginBottom": "25px"}
             )
         )
         
     return html.Aside(
         id='tab-4-sidebar',
-        className='driver-list-panel', # 沿用之前的側邊欄容器樣式
+        #className='driver-list-panel', # 沿用之前的側邊欄容器樣式
         children=html.Div(cards, style={"padding": "10px"})
     )
 

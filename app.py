@@ -91,6 +91,16 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
 # 2 Driver Instability: Chart
 def create_nvr_figure(selected_year, selected_drivers):
     df = data_handler.get_not_valid_race_data(selected_year, selected_drivers)
+    fig = go.Figure()
+    
+    if df.empty:
+        return fig
+    
+    df_sorted = df.sort_values(by='nvr', ascending=False)
+    current_drivers = df_sorted['driver'].tolist()
+    
+
+    
     fig = px.bar(df, x='driver', y='nvr', 
                  color='team', color_discrete_map=layouts.PLOTLY_TEAM_COLOR_MAP
                      #category_orders={"driver":order}
@@ -106,8 +116,9 @@ def create_nvr_figure(selected_year, selected_drivers):
     )
     fig.update_xaxes(
         title_text='',
-        categoryorder='total descending'
-        ) #ticklen=20
+        categoryorder='array',
+        categoryarray=current_drivers
+        ) 
     fig.update_yaxes(
         title_text='Percentage of Not Valid Race',
         title_font={'size': 18})
@@ -226,7 +237,7 @@ def update_main_figure(tab_id, selected_year, driver_list):
        figure_object = create_ranking_evolution_figure(selected_year, selected_drivers)
        return figure_object
     
-    # 2 Danking Instability
+    # 2 Driver Instability
     if tab_id == 'driver-instability':
        figure_object = create_nvr_figure(selected_year, selected_drivers)
        return figure_object

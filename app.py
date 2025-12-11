@@ -252,10 +252,11 @@ def update_title(tab_id):
         [
             Input('main-nav-tabs', 'value'),
             Input('year-dropdown', 'value'),
-            Input('selected-drivers-store', 'data')
+            Input('selected-drivers-store', 'data'),
+            Input('driver-dropdown', 'value'), 
         ]
 )
-def get_sidebar(tab_id, selected_year, stored_drivers):
+def get_sidebar(tab_id, selected_year, stored_drivers, selected_driver):
     # Create right-side content
     
     if tab_id in ['ranking-evolution', 'driver-instability', 'pace-stability']:
@@ -300,20 +301,28 @@ def update_selected_drivers(values):
 def update_driver_dropdown_options(year):
     if not year:
         return [], None
-    driver_options = data_handler.get_proper_format(year)['driver'].tolist()
-    options=[
-        {'label': html.Div([
-            html.Span('Driver', 
-                      style={
-                          'fontWeight': '500', 'fontSize': '0.9em','color': "#9f9f9f",'marginRight': '6px'
-                          }),
-                    html.Span(driver)
-                    ], style={'display': 'flex', 'alignItems': 'center'}), 
-                    'value': driver} 
-                    for driver in driver_options
+
+    df = data_handler.get_proper_format(year)   # có cả driver_id và driver
+
+    options = [
+        {
+            'label': html.Div([
+                html.Span('Driver', style={
+                    'fontWeight': '500',
+                    'fontSize': '0.9em',
+                    'color': "#9f9f9f",
+                    'marginRight': '6px'
+                }),
+                html.Span(row['driver'])  # chữ đẹp để hiển thị
+            ], style={'display': 'flex', 'alignItems': 'center'}),
+            'value': row['driver_id']      # 🔺 GIÁ TRỊ GỬI VỀ CALLBACK
+        }
+        for _, row in df.iterrows()
     ]
-    new_default_value = driver_options[0] if driver_options else None
+
+    new_default_value = df['driver_id'].iloc[0] if not df.empty else None
     return options, new_default_value
+
 
 
 # 4 Update main chart

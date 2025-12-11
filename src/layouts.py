@@ -281,38 +281,41 @@ def get_dropdowns(tab_id, current_year='2024'):
 
     # For tab 4, add a driver dropdown button:
 
-    if tab_id == 'position-flow-stability':
-        # Get drivers every year as options : Need to debug -- driver options don't change as current_year
-        driver_options = data_handler.get_proper_format(current_year)['driver'].tolist()
-        #driver_options =['Albon', 'Alonso']
-        dropdowns.append(
-            dcc.Dropdown(
-                id='driver-dropdown', 
-                options=[
-                    {'label': html.Div([
-                        html.Span('Driver', style={
-                            'fontWeight': '500',     
-                            'fontSize': '0.9em',      
-                            'color': "#9f9f9f",     
-                            'marginRight': '6px'      
-                        }), 
-                        #html.Span(current_year),
-                        html.Span(driver)
-                        
-                    ], style={'display': 'flex', 'alignItems': 'center'}), 
-                    
-                    'value': driver} 
-                    
-                    for driver in driver_options
-                ],
-                value='Alonso',
-                clearable=False,
-                className='year-dropdown-dash-wrap', 
-                style={'width': '200px'}
-                )
-        )
-    return dropdowns
+        # --- DRIVER DROPDOWN 
+    driver_options = data_handler.get_proper_format(current_year)['driver'].tolist()
 
+    dropdowns.append(
+        dcc.Dropdown(
+            id='driver-dropdown',
+            options=[
+                {
+                    'label': html.Div([
+                        html.Span(
+                            'Driver',
+                            style={
+                                'fontWeight': '500',
+                                'fontSize': '0.9em',
+                                'color': "#9f9f9f",
+                                'marginRight': '6px'
+                            }
+                        ),
+                        html.Span(driver)
+                    ], style={'display': 'flex', 'alignItems': 'center'}),
+                    'value': driver
+                }
+                for driver in driver_options
+            ],
+            value=driver_options[0] if driver_options else None,
+            clearable=False,
+            className='year-dropdown-dash-wrap',
+            style={
+                'width': '200px',
+                'display': 'block' if tab_id == 'position-flow-stability' else 'none'
+            }
+        )
+    )
+
+    return dropdowns
 
 
 # --- Ending -------

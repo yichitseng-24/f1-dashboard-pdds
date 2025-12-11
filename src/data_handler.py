@@ -2,12 +2,13 @@ import pandas as pd
 import sqlite3
 import os
 
-# 1. Database Path 
-#  data_handler.py in src/ file.
-# we os.path.join to get relative path
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH_1 = os.path.join(BASE_DIR, 'data', 'f1_1.db')
-DB_PATH_2 = os.path.join(BASE_DIR, 'data', 'f1_2.db')
+# 1. Database Path
+# File DB của bạn: C:\Users\minat\Desktop\f1db.db
+BASE_DIR = r"C:\Users\minat\Desktop"
+DB_FILE = "f1db.db"  # nếu tên file khác (vd: f1_1.db) thì sửa lại dòng này
+
+DB_PATH_1 = os.path.join(BASE_DIR, DB_FILE)
+DB_PATH_2 = DB_PATH_1
 CONSTRUCTOR_FILTER = """
     c.name NOT LIKE '%McLaren%' AND
     c.name NOT LIKE '%Mercedes%' AND
@@ -155,7 +156,7 @@ def get_not_valid_race_data(selected_year, selected_drivers):
 
 # 4 Position Flow Stability: data
 """lam's code"""
-def get_position_flow_data(selected_year, selected_driver):
+def get_position_flow_data(selected_year, selected_driver_id):
     query = f"""
         SELECT
             r.year,
@@ -172,14 +173,14 @@ def get_position_flow_data(selected_year, selected_driver):
          AND grid.driver_id = result.driver_id
          AND grid.type = 'STARTING_GRID_POSITION'
         WHERE r.year = ?
-          AND d.last_name = ?
+          AND result.driver_id = ?              -- 🔺 đổi dòng này
           AND result.type = 'RACE_RESULT'
           AND result.position_text NOT IN ('DNF','DNS','DNQ','DSQ','NC')
           AND ({CONSTRUCTOR_FILTER})
         ORDER BY r.date;
     """
     with sqlite3.connect(DB_PATH_2) as conn:
-        df = pd.read_sql_query(query, conn, params=(selected_year, selected_driver))
+        df = pd.read_sql_query(query, conn, params=(selected_year, selected_driver_id))
     return df
 
 

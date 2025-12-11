@@ -54,7 +54,7 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
                 line=dict(color=team_color),
                 hovertemplate=
                     #"<span style='color:" + team_color + "'><b>%{text}</b></span><br>" +
-                    driver_name + "<br>" +
+                    driver_name + "<br>" + #may be a bug
                     "Team: " + team + "<br>" +
                     "Round: %{x}<br>" +
                     "Points: %{y}<br>" +
@@ -135,6 +135,9 @@ def create_nvr_figure(selected_year, selected_drivers):
 
 # 4 Position Flow Stability: Chart
 """lam's code"""
+"""def (selected_year, selected_driver)
+return fig
+"""
 
 # ------ callback ----------
 
@@ -209,6 +212,29 @@ def update_selected_drivers(values):
             selected.append(v[0])
     return selected
 
+# 4 Update the driver menu
+@app.callback(
+        Output('driver-dropdown', 'options'),
+        Output('driver-dropdown', 'value'),
+        [Input('year-dropdown', 'value')]
+)
+def update_driver_dropdown_options(year):
+    if not year:
+        return [], None
+    driver_options = data_handler.get_proper_format(year)['driver'].tolist()
+    options=[
+        {'label': html.Div([
+            html.Span('Driver', 
+                      style={
+                          'fontWeight': '500', 'fontSize': '0.9em','color': "#9f9f9f",'marginRight': '6px'
+                          }),
+                    html.Span(driver)
+                    ], style={'display': 'flex', 'alignItems': 'center'}), 
+                    'value': driver} 
+                    for driver in driver_options
+    ]
+    new_default_value = driver_options[0] if driver_options else None
+    return options, new_default_value
 
 
 # 4 Update main chart
@@ -221,7 +247,7 @@ def update_selected_drivers(values):
         Input({'type': 'driver-checkbox', 'index': ALL}, 'value') 
         ]
         )
-def update_main_figure(tab_id, selected_year, driver_list):
+def update_main_figure(tab_id, selected_year, driver_list): #selected-single-driver
     
     # Driver list looks like :[['pierre-gasly'], [], ['yuki-tsunoda'], [], ['Alonso']]
     selected_drivers = []
@@ -255,6 +281,10 @@ def update_main_figure(tab_id, selected_year, driver_list):
     """
     
     return go.Figure()
+
+
+
+
 
 
 # Run app

@@ -296,6 +296,7 @@ def get_dropdowns(tab_id, current_year='2024'):
                             'color': "#9f9f9f",     
                             'marginRight': '6px'      
                         }), 
+                        #html.Span(current_year),
                         html.Span(driver)
                         
                     ], style={'display': 'flex', 'alignItems': 'center'}), 

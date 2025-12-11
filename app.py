@@ -135,9 +135,88 @@ def create_nvr_figure(selected_year, selected_drivers):
 
 # 4 Position Flow Stability: Chart
 """lam's code"""
-"""def (selected_year, selected_driver)
-return fig
-"""
+def visualize_position_flow_chart(df):
+    if df.empty:
+        fig = go.Figure()
+        fig.update_layout(title="No data available")
+        return fig
+
+    df = df[
+        df["grid_position_text"].notna()
+        & df["position_text"].notna()
+        & df["grid_position_text"].str.isdigit()
+        & df["position_text"].str.isdigit()
+    ].copy()
+
+    if df.empty:
+        fig = go.Figure()
+        fig.update_layout(title="No numeric positions")
+        return fig
+
+    df["start"] = df["grid_position_text"].astype(int)
+    df["finish"] = df["position_text"].astype(int)
+
+    start_unique = sorted(df["start"].unique())
+    finish_unique = sorted(df["finish"].unique())
+
+    start_labels = [f"Start {v}" for v in start_unique]
+    finish_labels = [f"Finish {v}" for v in finish_unique]
+    labels = start_labels + finish_labels
+
+    def spaced_positions(n, top=0.02, bottom=0.98):
+        if n <= 1:
+            return [0.5]
+        step = (bottom - top) / (n - 1)
+        return [top + i * step for i in range(n)]
+
+    y_start = spaced_positions(len(start_unique))
+    y_finish = spaced_positions(len(finish_unique))
+
+    node_x = [0.0001] * len(start_unique) + [0.9999] * len(finish_unique)
+    node_y = y_start + y_finish
+
+    start_index = {v: i for i, v in enumerate(start_unique)}
+    finish_index = {v: i + len(start_unique) for i, v in enumerate(finish_unique)}
+
+    flow = df.groupby(["start", "finish"], as_index=False).size()
+    source = [start_index[s] for s in flow["start"]]
+    target = [finish_index[f] for f in flow["finish"]]
+    values = flow["size"].tolist()
+
+    colors = [
+        ("#4F46E5", "rgba(79,70,229,0.35)"),
+        ("#0EA5E9", "rgba(14,165,233,0.35)"),
+        ("#10B981", "rgba(16,185,129,0.35)"),
+        ("#F59E0B", "rgba(245,158,11,0.35)"),
+        ("#F43F5E", "rgba(244,63,94,0.35)"),
+        ("#8B5CF6", "rgba(139,92,246,0.35)"),
+    ]
+
+    node_colors = [colors[i % len(colors)][0] for i in range(len(labels))]
+    link_colors = [colors[start_index[s] % len(colors)][1] for s in flow["start"]]
+
+    fig = go.Figure(
+        go.Sankey(
+            arrangement="fixed",
+            node=dict(
+                pad=25,
+                thickness=18,
+                label=labels,
+                color=node_colors,
+                x=node_x,
+                y=node_y,
+            ),
+            link=dict(source=source, target=target, value=values, color=link_colors),
+        )
+    )
+
+    fig.update_layout(
+        title=f"Start → Finish Flow — {df['driver_name'].iloc[0]} ({df['year'].iloc[0]})",
+        font=dict(size=14),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+    )
+    return fig
 
 # ------ callback ----------
 
@@ -244,10 +323,11 @@ def update_driver_dropdown_options(year):
         [
         Input('main-nav-tabs', 'value'),
         Input('year-dropdown', 'value'),
-        Input({'type': 'driver-checkbox', 'index': ALL}, 'value') 
+        Input({'type': 'driver-checkbox', 'index': ALL}, 'value'),
+        Input('driver-dropdown', 'value'), 
         ]
         )
-def update_main_figure(tab_id, selected_year, driver_list): #selected-single-driver
+def update_main_figure(tab_id, selected_year, driver_list, selected_single_driver): #selected-single-driver
     
     # Driver list looks like :[['pierre-gasly'], [], ['yuki-tsunoda'], [], ['Alonso']]
     selected_drivers = []
@@ -273,12 +353,15 @@ def update_main_figure(tab_id, selected_year, driver_list): #selected-single-dri
     if tab_id == 'driver-instability':
        figure_object = 
        return figure_object
-    
-    4 Position Flow Stability
-    if tab_id == 'driver-instability':
-       figure_object = 
-       return figure_object
     """
+    #4 Position Flow Stability
+    if tab_id == 'position-flow-stability':
+        if selected_year is None or selected_single_driver is None:
+            return go.Figure()
+        df = data_handler.get_position_flow_data(selected_year, selected_single_driver)
+        return visualize_position_flow_chart(df)
+
+
     
     return go.Figure()
 

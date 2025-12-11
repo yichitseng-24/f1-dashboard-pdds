@@ -3,6 +3,8 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import src.data_handler as data_handler 
 
+
+
 # 1 header layout
 header_layout = html.Header(
     className='header',
@@ -109,40 +111,41 @@ def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
 # 3 Cards: Not Yet Finished!!
 def create_summary_cards():
     # To create right-side cards for Tab 4
-    # 要有一個driver, year變數來裝現在選到的資料
-    # 傳入抓data的功能或是用現在已經有的數據來做
-    # Card: real data should be from data_handler.py
-    card_data = [ 
-        {"title": "Season Points", "value": "95%", "color": "success"},
-        {"title": "Instability", "value": "12 pts", "color": "warning"},
-        {"title": "Race Pace", "value": "上升", "color": "primary"},
+
+    card_types = [ 
+        {"key":"points","title": "Season Points","icon":"point_icon"},
+        {"key":"instability","title": "Instability","icon":"instab_icon"},
+        {"key":"pace","title": "Race Pace","icon":"pace_icon"}
     ]
     cards = []
-    for data in card_data:
+    for data in card_types:
+        value_id = f"card-{data['key']}-value"
+        icon_path = f"/assets/{data['icon']}.png"
+        print(icon_path)
+        icon_img = html.Img(className='card-icon-img',src=icon_path)
         cards.append(
             dbc.Card(
                 dbc.CardBody(
                     html.Div(
                         children=[
-                            html.H5(data["title"], 
+                            html.H5(children=[data["title"], icon_img], 
                                     className="card-text", 
                                     style={
-                                        "fontSize": "1.4em",
-                                        "fontWeight": "700",
-                                        "marginBottom":"7px"
+                                        "fontFamily":"Formula1Font, sans-serif",
+                                        "fontSize": "1.1em",
+                                        "fontWeight": "500",
+                                        "marginBottom":"7px",
+                                        "display":"flex",
+                                        "justifyContent": "space-between",
+                                        "width": "100%"
                                     }
                             ),
-                            html.P(data["value"], className=f"card-text text-{data['color']}", style={"fontSize": "2em",
+                            html.P(id=value_id, 
+                                   children=["-"],
+                                   className=f"card-text", 
+                                   style={"fontSize": "2em",
                                         "fontWeight": "700"}),
                         ],
-                        
-                        #style={
-                        #     "display": "flex",
-                        #     "justifyContent": "space-between",
-                        #     "alignItems": "center",
-                        #     "width": "100%"
-                        #}
-                        
                     )
                 ),
                 className='driver-summary-card',
@@ -282,7 +285,7 @@ def get_dropdowns(tab_id, current_year='2024'):
     # For tab 4, add a driver dropdown button:
 
     if tab_id == 'position-flow-stability':
-        # Get drivers every year as options : Need to debug -- driver options don't change as current_year
+        
         driver_options = data_handler.get_proper_format(current_year)['driver'].tolist()
         #driver_options =['Albon', 'Alonso']
         dropdowns.append(

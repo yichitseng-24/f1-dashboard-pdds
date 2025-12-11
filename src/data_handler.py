@@ -106,7 +106,6 @@ def get_ranking_evolution_data(selected_year, selected_drivers):
 
 # 2 Driver Instability: data
 def get_not_valid_race_data(selected_year, selected_drivers):
-       
        driver_placeholders = ', '.join(['?'] * len(selected_drivers))
        query = f"""
        SELECT r.year, d.last_name AS "driver", d.name AS "fullname",
@@ -135,6 +134,7 @@ def get_not_valid_race_data(selected_year, selected_drivers):
           }
        df["team"] = df["constructor_id"].map(constructor_map)
        return df
+print(get_not_valid_race_data(2024, ['lance-stroll']))
 
 # 3 Pace Stability: data
 # input year : value

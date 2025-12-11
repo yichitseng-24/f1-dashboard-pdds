@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import src.data_handler as data_handler 
 
+
 # Import font 'Inter'
 external_stylesheets = [ 
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
@@ -90,20 +91,21 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
 
 # 2 Driver Instability: Chart
 def create_nvr_figure(selected_year, selected_drivers):
-    df = data_handler.get_not_valid_race_data(selected_year, selected_drivers)
     fig = go.Figure()
+    try:
+        df = data_handler.get_not_valid_race_data(selected_year, selected_drivers)
+    except Exception:
+        return fig
     
     if df.empty:
         return fig
     
     df_sorted = df.sort_values(by='nvr', ascending=False)
     current_drivers = df_sorted['driver'].tolist()
-    
-
+    print(current_drivers)
     
     fig = px.bar(df, x='driver', y='nvr', 
                  color='team', color_discrete_map=layouts.PLOTLY_TEAM_COLOR_MAP
-                     #category_orders={"driver":order}
     )
     fig.update_layout(
         hoverlabel=dict(
@@ -125,8 +127,8 @@ def create_nvr_figure(selected_year, selected_drivers):
     fig.update_traces(
         hovertemplate="<b>%{x}</b><br>Not Valid Race: %{y}<extra></extra>" 
     )
-
     return fig
+
 
 # 3 Pace Stability: Chart
 """stella's code"""
@@ -282,12 +284,43 @@ def update_main_figure(tab_id, selected_year, driver_list): #selected-single-dri
     
     return go.Figure()
 
-
-
-
-
+# Update the cards (Tab4)
+@app.callback(
+    [
+        Output('card-points-value','children'),
+        Output('card-instability-value','children'),
+        Output('card-pace-value','children')
+    ],
+    [
+        Input('year-dropdown', 'value'),
+        Input('driver-dropdown','value')
+    ],
+    prevent_initial_call=True
+)
+def update_cards(year, driver):
+    df_driver = data_handler.get_proper_format(year)
+    row = df_driver[df_driver['driver']==driver]
+    if row.empty:
+        points = "N/A"
+    points = row['total_points'].iloc[0]
+    driver_id = row['driver_id'].iloc[0]
+    driver_list = [driver_id]
+    try:
+        instab_value = data_handler.get_not_valid_race_data(year, driver_list)['nvr'].iloc[0]
+        instab = f"{instab_value:.2f}"
+    except:
+        instab = "N/A"
+    """
+    try:
+        pace = get_race_pace_data()
+    else:
+        pace = "N/A"
+    """
+    pace = "N/A" # for test
+    return str(points), str(instab), str(pace)
 
 # Run app
 if __name__ == '__main__':
     # Set debug=True
     app.run(debug=True)
+

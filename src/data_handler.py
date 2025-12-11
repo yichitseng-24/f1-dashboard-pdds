@@ -145,9 +145,43 @@ def get_not_valid_race_data(selected_year, selected_drivers):
 
 # 4 Position Flow Stability: data
 """lam's code"""
+# 4 Position Flow Stability: data
 
-
-
+def get_position_flow_data(selected_year, selected_driver_id):
+    query = """
+        SELECT
+            r.year,
+            d.name AS driver_name,
+            d.id   AS driver_id,
+            grid.position_text AS grid_position_text,
+            result.position_text AS position_text
+        FROM race_data AS result
+        JOIN race r ON result.race_id = r.id
+        JOIN driver d ON result.driver_id = d.id
+        JOIN constructor c ON result.constructor_id = c.id
+        JOIN race_data AS grid
+          ON grid.race_id = result.race_id
+         AND grid.driver_id = result.driver_id
+         AND grid.type = 'STARTING_GRID_POSITION'
+        WHERE r.year = ?
+          AND d.id = ?
+          AND result.type = 'RACE_RESULT'
+          AND result.position_text NOT IN ('DNF','DNS','DNQ','DSQ','NC')
+          AND c.id NOT IN ('mclaren','mercedes','red-bull','ferrari')
+        ORDER BY r.round;
+    """
+    rows = query_db2(query, (selected_year, selected_driver_id))
+    df = pd.DataFrame(
+        rows,
+        columns=[
+            "year",
+            "driver_name",
+            "driver_id",
+            "grid_position_text",
+            "position_text",
+        ],
+    )
+    return df
 # 5 Cards: data
 
 # 6 year-dropdown option: data

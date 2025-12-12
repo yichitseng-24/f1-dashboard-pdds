@@ -312,7 +312,6 @@ def get_dropdowns(tab_id, current_year='2024'):
     return dropdowns
 
 
-
 # --- Ending -------
 # Fullpage layout for app.py to render 
 full_page_layout = html.Div([

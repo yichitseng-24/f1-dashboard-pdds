@@ -3,22 +3,11 @@ import sqlite3
 import os
 
 # 1. Database Path
-# File DB của bạn: C:\Users\minat\Desktop\f1db.db
-BASE_DIR = r"C:\Users\minat\Desktop"
-DB_FILE = "f1db.db"  # nếu tên file khác (vd: f1_1.db) thì sửa lại dòng này
-
-DB_PATH_1 = os.path.join(BASE_DIR, DB_FILE)
-DB_PATH_2 = DB_PATH_1
-CONSTRUCTOR_FILTER = """
-    c.name NOT LIKE '%McLaren%' AND
-    c.name NOT LIKE '%Mercedes%' AND
-    c.name NOT LIKE '%Red Bull%' AND
-    c.name NOT LIKE '%Ferrari%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%McLaren%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Mercedes%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Red Bull%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Ferrari%'
-"""
+#  data_handler.py in src/ file.
+# we os.path.join to get relative path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH_1 = os.path.join(BASE_DIR, 'data', 'f1_1.db')
+DB_PATH_2 = os.path.join(BASE_DIR, 'data', 'f1_2.db')
 
 # for db1
 def query_db(sql, args=(), one=False):

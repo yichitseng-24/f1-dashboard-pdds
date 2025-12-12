@@ -92,6 +92,8 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
 # 2 Driver Instability: Chart
 def create_nvr_figure(selected_year, selected_drivers):
     fig = go.Figure()
+    if not selected_drivers:
+        return fig
     try:
         df = data_handler.get_not_valid_race_data(selected_year, selected_drivers)
     except Exception:
@@ -105,7 +107,7 @@ def create_nvr_figure(selected_year, selected_drivers):
     
     fig = px.bar(df, x='driver', y='nvr', 
                  color='team', color_discrete_map=layouts.PLOTLY_TEAM_COLOR_MAP,
-                 template='simple_white'
+                 template='plotly'
     )
     fig.update_layout(
         hoverlabel=dict(
@@ -315,9 +317,7 @@ def update_selected_drivers(values):
 def update_driver_dropdown_options(year):
     if not year:
         return [], None
-
     df = data_handler.get_proper_format(year)   # có cả driver_id và driver
-
     options = [
         {
             'label': html.Div([
@@ -329,12 +329,14 @@ def update_driver_dropdown_options(year):
                 }),
                 html.Span(row['driver'])  # chữ đẹp để hiển thị
             ], style={'display': 'flex', 'alignItems': 'center'}),
-            'value': row['driver_id']      # 🔺 GIÁ TRỊ GỬI VỀ CALLBACK
+            'value': row['driver']      # here we have to decide to us driver 'Alonso' or driver-id 'fernando-alonso'
+                                        # driver last name -> change lam's sql or output data
+                                        # driver-id -> change update-cards's matching logic
         }
         for _, row in df.iterrows()
     ]
 
-    new_default_value = df['driver_id'].iloc[0] if not df.empty else None
+    new_default_value = df['driver'].iloc[0] if not df.empty else None
     return options, new_default_value
 
 
@@ -347,10 +349,10 @@ def update_driver_dropdown_options(year):
         Input('main-nav-tabs', 'value'),
         Input('year-dropdown', 'value'),
         Input({'type': 'driver-checkbox', 'index': ALL}, 'value'),
-        Input('driver-dropdown', 'value'), 
+        #Input('driver-dropdown', 'value'), 
         ]
         )
-def update_main_figure(tab_id, selected_year, driver_list, selected_single_driver): #selected-single-driver
+def update_main_figure(tab_id, selected_year, driver_list): #selected-single-driver
     
     # Driver list looks like :[['pierre-gasly'], [], ['yuki-tsunoda'], [], ['Alonso']]
     selected_drivers = []
@@ -383,13 +385,11 @@ def update_main_figure(tab_id, selected_year, driver_list, selected_single_drive
        return figure_object
     """
     #4 Position Flow Stability
-    if tab_id == 'position-flow-stability':
+    """if tab_id == 'position-flow-stability':
         if selected_year is None or selected_single_driver is None:
             return go.Figure()
         df = data_handler.get_position_flow_data(selected_year, selected_single_driver)
-        return visualize_position_flow_chart(df)
-
-
+        return visualize_position_flow_chart(df)"""
     
     return go.Figure()
 
@@ -402,7 +402,7 @@ def update_main_figure(tab_id, selected_year, driver_list, selected_single_drive
     ],
     [
         Input('year-dropdown', 'value'),
-        Input('driver-dropdown','value'),
+        Input('driver-dropdown','value'), #driver-input : 'Alonso', 'Gasly'
         Input('main-nav-tabs','value')
     ],
     prevent_initial_call=True

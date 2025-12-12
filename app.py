@@ -1,6 +1,6 @@
 # app.py 
 import dash
-from dash import Input, Output, MATCH, ALL, State, dcc, html, dash_table
+from dash import Input, Output, ALL, State, dcc, html,  no_update
 import src.layouts as layouts 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -143,6 +143,17 @@ return fig
 
 # ------ callback ----------
 
+@app.callback(
+    Output('driver-dropdown', "style"),
+    Input('main-nav-tabs', "value")
+)
+def toggle_dropdown(tab_id):
+    if tab_id == 'position-flow-stability':
+        return {'display': 'block', 'width': '200px'}
+    else:
+        return {"display": "none", "width": "200px"}
+
+
 # 1 Render left page (titles, dropdowns, main chart)
 @app.callback(
     Output('main-container-left', 'children'),
@@ -272,17 +283,21 @@ def update_main_figure(tab_id, selected_year, driver_list): #selected-single-dri
 
     """
     3 Pace Stability
-    if tab_id == 'driver-instability':
+    if tab_id == '':
        figure_object = 
        return figure_object
     
     4 Position Flow Stability
-    if tab_id == 'driver-instability':
+    if tab_id == '':
        figure_object = 
        return figure_object
     """
     
     return go.Figure()
+
+
+
+
 
 # Update the cards (Tab4)
 @app.callback(
@@ -293,22 +308,34 @@ def update_main_figure(tab_id, selected_year, driver_list): #selected-single-dri
     ],
     [
         Input('year-dropdown', 'value'),
-        Input('driver-dropdown','value')
+        Input('driver-dropdown','value'),
+        Input('main-nav-tabs','value')
     ],
     prevent_initial_call=True
 )
-def update_cards(year, driver):
+def update_cards(year, driver, tab_id):
+    if tab_id != 'position-flow-stability':
+        return no_update, no_update, no_update
     df_driver = data_handler.get_proper_format(year)
     row = df_driver[df_driver['driver']==driver]
     if row.empty:
         points = "N/A"
-    points = row['total_points'].iloc[0]
-    driver_id = row['driver_id'].iloc[0]
-    driver_list = [driver_id]
-    try:
-        instab_value = data_handler.get_not_valid_race_data(year, driver_list)['nvr'].iloc[0]
-        instab = f"{instab_value:.2f}"
-    except:
+        driver_id = None
+    else:
+        points = row['total_points'].iloc[0]
+        driver_id = row['driver_id'].iloc[0]
+    if driver_id is not None:
+        driver_list = [driver_id]
+        try:
+            instab_df = data_handler.get_not_valid_race_data(year, driver_list)
+            if not instab_df.empty and 'nvr' in instab_df.columns:
+                instab_value = instab_df['nvr'].iloc[0]
+                instab = f"{instab_value:.2f}"
+            else:
+                instab = "N/A"
+        except Exception:
+            instab = "N/A"
+    else:
         instab = "N/A"
     """
     try:

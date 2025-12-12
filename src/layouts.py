@@ -121,7 +121,6 @@ def create_summary_cards():
     for data in card_types:
         value_id = f"card-{data['key']}-value"
         icon_path = f"/assets/{data['icon']}.png"
-        print(icon_path)
         icon_img = html.Img(className='card-icon-img',src=icon_path)
         cards.append(
             dbc.Card(
@@ -250,70 +249,66 @@ def get_dropdowns(tab_id, current_year='2024'):
     ]
 
     # For tab 3, add a race dropdown button
-    
-    if tab_id == 'pace-stability':
-        # Here we need a function to access a race options according to current_year
-        race_options =['Japan', 'Qatar'] 
-        dropdowns.append(
-            dcc.Dropdown(
-                id='race-dropdown', 
-                options=[
-                    {'label': html.Div([
-                        # Style "GP" 
-                        html.Span('GP', style={
-                            'fontWeight': '500',      
-                            'fontSize': '0.9em',      
-                            'color': "#9f9f9f",     
-                            'marginRight': '6px'      
-                        }), 
-                        
-                        html.Span(race_name)
-                        
-                    ], style={'display': 'flex', 'alignItems': 'center'}), 
+    """
+    race_options =['Japan', 'Qatar'] 
+    dropdowns.append(
+        dcc.Dropdown(
+            id='race-dropdown', 
+            options=[
+                {'label': html.Div([
+                    # Style "GP" 
+                    html.Span('GP', style={
+                        'fontWeight': '500',      
+                        'fontSize': '0.9em',      
+                        'color': "#9f9f9f",     
+                           'marginRight': '6px'      
+                }), 
+                            
+                    html.Span(race_name)
+                            
+                ], style={'display': 'flex', 'alignItems': 'center'}), 
                     
-                    'value': race_name} 
-                    
-                    for race_name in race_options
-                ],
-                value='Japan',
-                clearable=False,
-                className='year-dropdown-dash-wrap', 
-                style={'width': '150px'}
-                )
+                'value': race_name} 
+                        
+                for race_name in race_options
+            ],
+            value='Japan',
+            clearable=False,
+            className='year-dropdown-dash-wrap', 
+            style={'width': '150px',"display": "none"}
         )
-
+    )
+    """
     # For tab 4, add a driver dropdown button:
-
-    if tab_id == 'position-flow-stability':
-        
-        driver_options = data_handler.get_proper_format(current_year)['driver'].tolist()
-        #driver_options =['Albon', 'Alonso']
-        dropdowns.append(
-            dcc.Dropdown(
-                id='driver-dropdown', 
-                options=[
-                    {'label': html.Div([
-                        html.Span('Driver', style={
-                            'fontWeight': '500',     
-                            'fontSize': '0.9em',      
-                            'color': "#9f9f9f",     
-                            'marginRight': '6px'      
-                        }), 
-                        #html.Span(current_year),
-                        html.Span(driver)
-                        
-                    ], style={'display': 'flex', 'alignItems': 'center'}), 
+    driver_options = data_handler.get_proper_format(current_year)['driver'].tolist()
+    #driver_options =['Albon', 'Alonso']
+    dropdowns.append(
+        dcc.Dropdown(
+            id='driver-dropdown', 
+            options=[
+                {'label': html.Div([
+                    html.Span('Driver', style={
+                        'fontWeight': '500',     
+                        'fontSize': '0.9em',      
+                        'color': "#9f9f9f",     
+                        'marginRight': '6px'      
+                    }), 
+                    #html.Span(current_year),
+                    html.Span(driver)
                     
-                    'value': driver} 
+                ], style={'display': 'flex', 'alignItems': 'center'}), 
                     
-                    for driver in driver_options
-                ],
-                value='Alonso',
-                clearable=False,
-                className='year-dropdown-dash-wrap', 
-                style={'width': '200px'}
-                )
+                'value': driver} 
+                    
+                for driver in driver_options
+            ],
+            value='Alonso',
+            clearable=False,
+            className='year-dropdown-dash-wrap', 
+            style={'width': '200px',"display": "none"}
         )
+    )  
+        
     return dropdowns
 
 

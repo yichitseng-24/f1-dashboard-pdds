@@ -134,7 +134,6 @@ def get_not_valid_race_data(selected_year, selected_drivers):
           }
        df["team"] = df["constructor_id"].map(constructor_map)
        return df
-print(get_not_valid_race_data(2024, ['lance-stroll']))
 
 # 3 Pace Stability: data
 # input year : value

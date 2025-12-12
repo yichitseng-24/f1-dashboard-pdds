@@ -164,12 +164,14 @@ def get_position_flow_data(selected_year, selected_driver_id):
           AND result.driver_id = ?              -- 🔺 đổi dòng này
           AND result.type = 'RACE_RESULT'
           AND result.position_text NOT IN ('DNF','DNS','DNQ','DSQ','NC')
-          AND ({CONSTRUCTOR_FILTER})
+    
         ORDER BY r.date;
     """
+    # -- AND ({CONSTRUCTOR_FILTER})
     with sqlite3.connect(DB_PATH_2) as conn:
         df = pd.read_sql_query(query, conn, params=(selected_year, selected_driver_id))
     return df
+
 
 
 

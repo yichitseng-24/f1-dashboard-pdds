@@ -62,7 +62,10 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
                     "<extra></extra>"
             )
         )
-    year_value = df["year"].iloc[0]
+        # add here
+        max_round = sub["round"].max() 
+        x_range_max = max_round + 0.5 
+        x_range_min = 0.5
     fig.update_layout(
         xaxis_title="Round",
         yaxis_title="Points",
@@ -71,7 +74,14 @@ def create_ranking_evolution_figure(selected_year, selected_drivers):
         showlegend=False,
         xaxis=dict(
             tickmode='linear',
+            range=[x_range_min, x_range_max], #add here
             #dtick=1
+        ),
+        # add here
+        yaxis=dict(
+            showgrid=True,
+            gridcolor='rgba(150, 150, 150, 0.2)',
+            zeroline=False
         ),
         margin=dict(
             l=30,  # Left margin
@@ -117,6 +127,11 @@ def create_nvr_figure(selected_year, selected_drivers):
         ),
         plot_bgcolor='rgba(0,0,0,0)',
         showlegend=False,
+        yaxis=dict(
+            showgrid=True,
+            gridcolor='rgba(150, 150, 150, 0.2)',
+            zeroline=False
+        )
     )
     fig.update_xaxes(
         title_text='',

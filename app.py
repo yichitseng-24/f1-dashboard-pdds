@@ -102,10 +102,10 @@ def create_nvr_figure(selected_year, selected_drivers):
     
     df_sorted = df.sort_values(by='nvr', ascending=False)
     current_drivers = df_sorted['driver'].tolist()
-    print(current_drivers)
     
     fig = px.bar(df, x='driver', y='nvr', 
-                 color='team', color_discrete_map=layouts.PLOTLY_TEAM_COLOR_MAP
+                 color='team', color_discrete_map=layouts.PLOTLY_TEAM_COLOR_MAP,
+                 template='simple_white'
     )
     fig.update_layout(
         hoverlabel=dict(
@@ -143,6 +143,7 @@ return fig
 
 # ------ callback ----------
 
+# 0 show driver dropdown when tab4
 @app.callback(
     Output('driver-dropdown', "style"),
     Input('main-nav-tabs', "value")
@@ -294,10 +295,6 @@ def update_main_figure(tab_id, selected_year, driver_list): #selected-single-dri
     """
     
     return go.Figure()
-
-
-
-
 
 # Update the cards (Tab4)
 @app.callback(

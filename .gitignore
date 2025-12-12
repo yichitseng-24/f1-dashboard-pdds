@@ -1,0 +1,19 @@
+# Python Environment
+venv/
+__pycache__/
+*.pyc
+
+# Dash / Plotly / Data Files
+data/*.db      # 忽略數據庫檔案 (如果它們在 data/ 資料夾中且不應版本控制)
+data/*.sqlite
+.ipynb_checkpoints/
+*.csv          # 忽略大的臨時 CSV 檔案
+
+# IDE and OS
+.DS_Store
+.vscode/
+
+# 確保 src/ 下的快取也被忽略
+src/__pycache__/
+data/
+

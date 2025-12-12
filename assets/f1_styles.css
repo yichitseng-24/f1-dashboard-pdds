@@ -103,14 +103,19 @@ body {
     width: 100%;
     max-width: 1600px;
     margin: 0 auto;
+    overflow: hidden;
+
 }
 
 /* 左欄（內容區） */
 #main-container-left {
     flex: 1;
-    /* 撐滿剩餘空間 */
+    /* Takes remaining space */
+    padding: 20px;
+    overflow-y: auto;
+    /* Allow scrolling if content is too long */
     min-width: 0;
-    /* 防止子元素爆版 */
+    /* Allows flex item to shrink below content size */
 }
 
 
@@ -118,6 +123,10 @@ body {
 #main-container-right {
     width: 350px;
     /* 固定 sidebar 寬 */
+    min-width: 280px;
+    /* Minimum width on small screens */
+    overflow-y: auto;
+    /* Allow scrolling if content is too long */
     flex-shrink: 0;
     /* 不要被擠壓 */
 }
@@ -261,7 +270,7 @@ body {
 }
 
 .panel-title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     color: #000;
 }
@@ -269,6 +278,8 @@ body {
 /* Driver List Table */
 .driver-table {
     width: 100%;
+    table-layout: fixed;
+    /* Fixed layout for consistent columns */
     border-collapse: collapse;
 }
 
@@ -326,20 +337,14 @@ body {
 
 /* Card */
 .driver-summary-card {
-    width: 310px;
-    height: 130px;
+    width: 350px;
+    height: 120px;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     max-height: 700px;
     overflow-y: auto;
-}
-
-
-.card-icon-img {
-    height: 25px;
-    width: 25px
 }
 
 
@@ -459,4 +464,111 @@ body {
     .main-container {
         padding: 20px;
     }
+}
+
+/* Button styles for Select All/Clear All - Image with text below */
+.button-container {
+    display: flex;
+    flex-direction: row;
+    /* Stack buttons vertically */
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+/* Make the entire button container clickable */
+.button-with-text {
+    display: flex;
+    align-items: center;
+    /* Vertically center text and image */
+    gap: 15px;
+    /* Space between text and image */
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    /* Invisible border for consistent sizing */
+}
+
+/* Add hover effect for the entire button */
+.button-with-text:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Light gray background on hover */
+    transform: translateY(-2px);
+    /* Slight lift effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Add active/click effect */
+.button-with-text:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.button-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Select All text - default color */
+.select-all-text {
+    color: #333;
+    /* Dark gray/black */
+}
+
+/* Clear All text - red */
+.clear-all-text {
+    color: #e12020;
+    /* Red color */
+}
+
+/* Image button styles */
+.select-all-button-img,
+.clear-all-button-img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.2s ease;
+}
+
+.select-all-button-img:hover,
+.clear-all-button-img:hover {
+    transform: scale(1.08);
+    opacity: 0.9;
+}
+
+/* Remove old button styles */
+.select-all-button,
+.clear-all-button {
+    display: none;
+}
+
+/* Horizontal line separator */
+.separator-line {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 15px 0 20px 0;
+    width: 100%;
+}
+
+/* Card */
+.driver-summary-card {
+    width: 310px;
+    height: 130px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+
+.card-icon-img {
+    height: 25px;
+    width: 25px
 }

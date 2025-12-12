@@ -3,8 +3,11 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import src.data_handler as data_handler 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/master
 # 1 header layout
 header_layout = html.Header(
     className='header',
@@ -14,7 +17,11 @@ header_layout = html.Header(
                 src="/assets/f1_logo.svg"
             )
         ]),
+<<<<<<< HEAD
         #  Nav Tabs
+=======
+        # Nav Tabs
+>>>>>>> origin/master
         dcc.Tabs(
             id='main-nav-tabs',
             value='ranking-evolution',
@@ -32,9 +39,15 @@ header_layout = html.Header(
 
 # * Create a color map for Plotly 
 PLOTLY_TEAM_COLOR_MAP = {
+<<<<<<< HEAD
     'RBR': '#405dff',  'MCL': '#f58020',  'FER': '#e12020','MER': '#0bf3d3',
     'AST': '#199972','ALP': '#0093ca','HAA': '#b6babd',
     'RB': '#6592fb','WIL': '#60c4fd','SAU': '#4ce25d',
+=======
+    'RBR': '#405dff', 'MCL': '#f58020', 'FER': '#e12020', 'MER': '#0bf3d3',
+    'AST': '#199972', 'ALP': '#0093ca', 'HAA': '#b6babd',
+    'RB': '#6592fb', 'WIL': '#60c4fd', 'SAU': '#4ce25d',
+>>>>>>> origin/master
     'AT': '#20394C', 'ARO': '#A42134'
 }
 
@@ -45,13 +58,20 @@ TEAM_COLORS = {
     'WIL': 'team-wil', 'SAU': 'team-sau', 'AT': 'team-at', 'ARO': 'team-aro'
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 # 2 Driver Selection Table
 # 2.1 Driver Selection Table: table layout
 def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
     # In order to remember those selected between tabs
     if selected_driver_ids is None:
         selected_driver_ids = []
+<<<<<<< HEAD
+=======
+    
+>>>>>>> origin/master
     header_row = html.Thead(children=[
         html.Tr(children=[
             html.Th(style={'width': '40px'}), 
@@ -73,6 +93,7 @@ def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
             value = [driver_id] if index < 12 else []
         
         table_body.append(
+<<<<<<< HEAD
             # 使用模式匹配 ID 來實現 Callbacks
             html.Tr(className='driver-row', id={'type': 'driver-row', 'index': driver_id}, children=[
                 html.Td(className='checkbox-cell', children=[
@@ -89,12 +110,34 @@ def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
                 html.Td(row['total_points'], className='points-cell'),
             ], 
             #style={'backgroundColor': '#f0f8ff'} if index < 4 else {} #default selected bg color 
+=======
+            html.Tr(
+                className='driver-row', 
+                id={'type': 'driver-row', 'index': driver_id}, 
+                children=[
+                    html.Td(className='checkbox-cell', children=[
+                        dcc.Checklist(
+                            id={'type': 'driver-checkbox', 'index': driver_id},
+                            options=[{'label': '', 'value': driver_id}],
+                            value=value,
+                            inline=True,
+                            className='driver-checkbox',
+                        )
+                    ]),
+                    html.Td(row['team'], className=f'team-cell {team_class}'),
+                    html.Td(row['driver'], className='driver-cell'),
+                    html.Td(row['total_points'], className='points-cell'),
+                ]
+>>>>>>> origin/master
             )
         )
     
     return [html.Table(className='driver-table', children=[header_row, html.Tbody(table_body)])]
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 # 2.2 Driver Selection Table: table container layout
 def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
     # Create right-side layout
@@ -104,11 +147,56 @@ def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
             html.Div(className='panel-header', children=[
                 html.H2('Driver List', className='panel-title'),
             ]),
+<<<<<<< HEAD
+=======
+
+            # Buttons container
+            html.Div([
+                # Select All button
+                html.Div(
+                    [
+                        html.Img(
+                            src="/assets/select_all.png",
+                            className='select-all-button-img',
+                            style={'cursor': 'pointer'}
+                        ),
+                        html.Span('Select All', className='button-text select-all-text'),
+                    ],
+                    id='select-all-button',
+                    className='button-with-text',
+                    n_clicks=0,
+                ),
+                
+                # Clear All button
+                html.Div(
+                    [
+                        html.Img(
+                            src="/assets/clear_all.png",
+                            className='clear-all-button-img',
+                            style={'cursor': 'pointer'}
+                        ),
+                        html.Span('Clear All', className='button-text clear-all-text'),
+                    ],
+                    id='clear-all-button',
+                    className='button-with-text',
+                    n_clicks=0,
+                )
+            ], className='button-container'),
+            
+            # Horizontal line separator
+            html.Hr(className='separator-line'),
+
+            # Driver table
+>>>>>>> origin/master
             html.Div(id='dynamic-driver-table-container', children=create_driver_table_rows(df_drivers, selected_driver_ids))
         ]
     )
 
+<<<<<<< HEAD
 # 3 Cards: Not Yet Finished!!
+=======
+# 3 Cards: Summary cards for Position Flow Stability tab
+>>>>>>> origin/master
 def create_summary_cards():
     # To create right-side cards for Tab 4
 
@@ -196,9 +284,17 @@ def create_content_area_top(tab_id, current_year):
 def create_content_area_down():
     return html.Div(
         id='content_area_down',
+<<<<<<< HEAD
         className='chart-container', children=[
             dcc.Graph(id='main-chart-graph', style={'height': '100%'})  
         ])
+=======
+        className='chart-container', 
+        children=[
+            dcc.Graph(id='main-chart-graph', style={'height': '100%'})  
+        ]
+    )
+>>>>>>> origin/master
 
 # 4.3 Combine Top and Down areas
 def create_content_area(tab_id, current_year='2024'):
@@ -206,7 +302,12 @@ def create_content_area(tab_id, current_year='2024'):
     content_area_down = create_content_area_down()
 
     return html.Div(
+<<<<<<< HEAD
         className='content-area', children=[
+=======
+        className='content-area', 
+        children=[
+>>>>>>> origin/master
             content_area_top,
             content_area_down
         ]
@@ -217,6 +318,7 @@ def create_content_area(tab_id, current_year='2024'):
 # 1 Define titles according to tab-id
 def get_tab_titles(tab_id):
     if tab_id == 'ranking-evolution':
+<<<<<<< HEAD
         return "Ranking Point Evolution", "Driver's total points about throughout the season"
     elif tab_id == 'driver-instability':
         return "Driver Instability", "Analysis of driver performance variance."
@@ -311,11 +413,91 @@ def get_dropdowns(tab_id, current_year='2024'):
         
     return dropdowns
 
+=======
+        return "Ranking Point Evolution", "Driver's total points throughout the season"
+    elif tab_id == 'driver-instability':
+        return "Driver Instability", "Analysis of driver performance variance"
+    elif tab_id == 'pace-stability':
+        return "Pace Stability", "Driver's lap time consistency analysis"
+    elif tab_id == 'position-flow-stability':
+        return "Position Flow Stability", "Driver's grid to finish position analysis"
+    return "Unknown Tab", ""
+
+def get_dropdowns(tab_id, current_year='2024'):
+    race_year = ['2022', '2023', '2024']
+    dropdowns = [
+        dcc.Dropdown(
+            id='year-dropdown', 
+            options=[
+                {
+                    'label': html.Div([
+                        html.Span('🗓', style={'marginRight': '10px'}), 
+                        html.Span(year)
+                    ], style={'display': 'flex', 'alignItems': 'center'}), 
+                    'value': year
+                } for year in race_year
+            ],
+            value=current_year,
+            clearable=False,
+            className='year-dropdown-dash-wrap', 
+            style={'width': '150px'} 
+        )
+    ]
+
+
+    # Add driver dropdown for Position Flow Stability tab (initially hidden)
+    if tab_id == 'position-flow-stability':
+        try:
+            driver_options = data_handler.get_proper_format(current_year)
+            
+            dropdowns.append(
+                dcc.Dropdown(
+                    id='driver-dropdown',
+                    options=[
+                        {
+                            'label': html.Div([
+                                html.Span('Driver', style={
+                                    'fontWeight': '500',
+                                    'fontSize': '0.9em',
+                                    'color': "#9f9f9f",
+                                    'marginRight': '6px'
+                                }),
+                                html.Span(row['driver'])
+                            ], style={'display': 'flex', 'alignItems': 'center'}),
+                            'value': row['driver_id']
+                        }
+                        for _, row in driver_options.iterrows()
+                    ],
+                    value=driver_options['driver_id'].iloc[0] if not driver_options.empty else None,
+                    clearable=False,
+                    className='year-dropdown-dash-wrap',
+                    style={'width': '200px'}
+                )
+            )
+        except:
+            # If there's an error getting driver data, still create the dropdown but empty
+            dropdowns.append(
+                dcc.Dropdown(
+                    id='driver-dropdown',
+                    options=[],
+                    value=None,
+                    clearable=False,
+                    className='year-dropdown-dash-wrap',
+                    style={'width': '200px'}
+                )
+            )
+
+    return dropdowns
+>>>>>>> origin/master
 
 # --- Ending -------
 # Fullpage layout for app.py to render 
 full_page_layout = html.Div([
+<<<<<<< HEAD
     dcc.Store(id='selected-drivers-store', data=[]), #here
+=======
+    dcc.Store(id='selected-drivers-store', data=[]),
+>>>>>>> origin/master
     header_layout,
     html.Div(id='main-container', 
              className='main-container',
@@ -324,9 +506,14 @@ full_page_layout = html.Div([
             create_content_area('ranking-evolution', current_year='2024')
         ]),
         html.Div(id='main-container-right')
+<<<<<<< HEAD
         ]) 
 ])
 
 
 
 
+=======
+    ]) 
+])
+>>>>>>> origin/master

@@ -1,8 +1,5 @@
 dash
 pandas
 plotly
-<<<<<<< HEAD
+numpy
 dash_bootstrap_components
-=======
-dash_bootstrap_components
->>>>>>> origin/master

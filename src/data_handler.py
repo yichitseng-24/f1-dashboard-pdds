@@ -1,34 +1,14 @@
 import pandas as pd
 import sqlite3
 import os
-<<<<<<< HEAD
-
-# 1. Database Path
-#  data_handler.py in src/ file.
-# we os.path.join to get relative path
-=======
 import numpy as np
 
 # 1. Database Path - using relative paths
->>>>>>> origin/master
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH_1 = os.path.join(BASE_DIR, 'data', 'f1_1.db')
 DB_PATH_2 = os.path.join(BASE_DIR, 'data', 'f1_2.db')
 
-<<<<<<< HEAD
-=======
-CONSTRUCTOR_FILTER = """
-    c.name NOT LIKE '%McLaren%' AND
-    c.name NOT LIKE '%Mercedes%' AND
-    c.name NOT LIKE '%Red Bull%' AND
-    c.name NOT LIKE '%Ferrari%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%McLaren%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Mercedes%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Red Bull%' AND
-    IFNULL(c.full_name,'') NOT LIKE '%Ferrari%'
-"""
 
->>>>>>> origin/master
 # for db1
 def query_db(sql, args=(), one=False):
     """Execute a read-only query and return rows as dict-like objects."""
@@ -51,29 +31,6 @@ def query_db2(sql, args=(), one=False):
 
 # 1. Driver Selection Table
 # 1.1 Driver Selection Table: formatting 
-<<<<<<< HEAD
-# (1) aston-martin -> AST (2) lando-norris -> Lando
-def get_proper_format(selected_year):
-     constructor_map = {
-          "aston-martin": "AST", "alpine": "ALP",
-          "haas": "HAA", "alphatauri": "AT",
-          "alfa-romeo":"ARO","williams":"WIL",
-          "kick-sauber":"SAU","rb":"RB"
-          }
-     df = get_current_season_drivers(selected_year)
-     df["team"] = df["constructor_id"].map(constructor_map)
-     df["driver"] = df["driver_id"].str.split("-").str[-1].str.capitalize()
-     return df
-#1.2 Driver Selection Table: data
-def get_current_season_drivers(selected_year):
-       query = """
-        SELECT year, constructor_id, driver_id, total_points
-        FROM (
-            SELECT sd.year, sed.constructor_id, sd.driver_id, sd.total_points,
-            ROW_NUMBER() OVER (
-            PARTITION BY sd.year
-            ORDER BY sd.total_points DESC
-=======
 def get_proper_format(selected_year):
     constructor_map = {
         "aston-martin": "AST", "alpine": "ALP",
@@ -95,7 +52,6 @@ def get_current_season_drivers(selected_year):
         ROW_NUMBER() OVER (
         PARTITION BY sd.year
         ORDER BY sd.total_points DESC
->>>>>>> origin/master
         ) AS rn
         FROM season_driver sd
         JOIN season_entrant_driver sed
@@ -103,19 +59,6 @@ def get_current_season_drivers(selected_year):
         AND sd.driver_id = sed.driver_id
         WHERE sd.year IN ('2022', '2023', '2024')
         AND sed.constructor_id NOT IN ('mclaren', 'red-bull', 'ferrari', 'mercedes')
-<<<<<<< HEAD
-        )
-        WHERE rn <= 12  AND year = ?
-        ORDER BY year DESC, total_points DESC;
-        """
-       rows=query_db(query, (selected_year,))
-       df=pd.DataFrame(rows, columns=["year","constructor_id","driver_id", "total_points"])
-       return df
-
-
-# 2 Ranking Evolution : data
-def get_ranking_evolution_data(selected_year, selected_drivers):
-=======
     )
     WHERE rn <= 12 AND year = ?
     ORDER BY year DESC, total_points DESC;
@@ -129,7 +72,6 @@ def get_ranking_evolution_data(selected_year, selected_drivers):
     if not selected_drivers:
         return pd.DataFrame()
     
->>>>>>> origin/master
     placeholders = ",".join(["?"] * len(selected_drivers))
     query = f"""
         SELECT
@@ -153,60 +95,6 @@ def get_ranking_evolution_data(selected_year, selected_drivers):
         ORDER BY race.round;
     """
     params = tuple([selected_year] + selected_drivers)
-<<<<<<< HEAD
-    rows=query_db(query, params)
-    df=pd.DataFrame(rows, columns=["race_id","driver_id","year", "round", 'official_name', 'points', 'constructor_id'])
-    constructor_map = {
-          "aston-martin": "AST", "alpine": "ALP",
-          "haas": "HAA", "alphatauri": "AT",
-          "alfa-romeo":"ARO","williams":"WIL",
-          "kick-sauber":"SAU","rb":"RB"
-          }
-    df["team"] = df["constructor_id"].map(constructor_map)
-    return df
-
-# 2 Driver Instability: data
-def get_not_valid_race_data(selected_year, selected_drivers):
-       driver_placeholders = ', '.join(['?'] * len(selected_drivers))
-       query = f"""
-       SELECT r.year, d.last_name AS "driver", d.name AS "fullname",
-       COUNT(rr.race_id) AS "total_race_count",
-       COUNT (CASE WHEN rr.position_number IS NOT NULL THEN 1 ELSE NULL END) AS "total_finished_race_count", 
-       COUNT(CASE WHEN rr.position_text IN ('DNF','DNS','DNQ','DSQ','NC') THEN 1 ELSE NULL END) AS "dnf_count",
-       rr.constructor_id
-       FROM race_result AS rr
-       JOIN race AS r ON rr.race_id = r.id
-       JOIN driver AS d ON rr.driver_id = d.id
-       WHERE r.year = ?
-       AND rr.driver_id IN ({driver_placeholders})
-       --IN ('2022', '2023', '2024')
-       GROUP BY r.year, d.name
-       """
-       params = tuple([selected_year]+selected_drivers)
-
-       rows=query_db(query, params)
-       df=pd.DataFrame(rows, columns=['year', 'driver','fullname','total_race_count' ,'total_finished_race_count', 'dnf_count','constructor_id'])
-       df['nvr'] = df['dnf_count']/df['total_finished_race_count']
-       constructor_map = {
-          "aston-martin": "AST", "alpine": "ALP",
-          "haas": "HAA", "alphatauri": "AT",
-          "alfa-romeo":"ARO","williams":"WIL",
-          "kick-sauber":"SAU","rb":"RB"
-          }
-       df["team"] = df["constructor_id"].map(constructor_map)
-       return df
-
-# 3 Pace Stability: data
-# input year : value
-# input driver: a list
-"""stella's code"""
-
-
-
-# 4 Position Flow Stability: data
-"""lam's code"""
-def get_position_flow_data(selected_year, selected_driver_id):
-=======
     rows = query_db(query, params)
     df = pd.DataFrame(rows, columns=["race_id", "driver_id", "year", "round", 'official_name', 'points', 'constructor_id'])
     
@@ -219,7 +107,7 @@ def get_position_flow_data(selected_year, selected_driver_id):
     df["team"] = df["constructor_id"].map(constructor_map)
     return df
 
-# 3 Driver Instability: data
+# 3 Driver stability: data
 def get_not_valid_race_data(selected_year, selected_drivers):
     if not selected_drivers:
         return pd.DataFrame()
@@ -236,6 +124,7 @@ def get_not_valid_race_data(selected_year, selected_drivers):
     JOIN driver AS d ON rr.driver_id = d.id
     WHERE r.year = ?
     AND rr.driver_id IN ({driver_placeholders})
+    AND rr.constructor_id NOT IN ('mclaren', 'red-bull', 'ferrari', 'mercedes')
     GROUP BY r.year, d.name, rr.constructor_id
     """
     params = tuple([selected_year] + selected_drivers)
@@ -259,18 +148,6 @@ def get_not_valid_race_data(selected_year, selected_drivers):
     return df
 
 # 4 Pace Stability: data
-def get_race_data_for_year(year):
-    """Get race names for a specific year"""
-    query = """
-    SELECT DISTINCT name, round
-    FROM race
-    WHERE year = ?
-    ORDER BY round
-    """
-    rows = query_db(query, (year,))
-    df = pd.DataFrame(rows, columns=["name", "round"])
-    return df
-
 def get_race_pace_data(selected_year, selected_drivers=None, selected_race=None):
     """
     Fetch race pace per lap data for the selected year and drivers.
@@ -306,7 +183,8 @@ def get_race_pace_data(selected_year, selected_drivers=None, selected_race=None)
         SELECT 
             r.year, 
             d.name,
-            d.abbreviation AS driver,  
+            d.last_name AS driver,
+            d.abbreviation,  
             rr.race_id, r.grand_prix_id, 
             rr.position_text, rr."time", rr.time_millis, rr.laps, r.course_length, 
             rr.time_millis/(rr.laps) AS race_pace_per_lap_millis,
@@ -324,7 +202,7 @@ def get_race_pace_data(selected_year, selected_drivers=None, selected_race=None)
     rows = query_db(query, params)
     
     df = pd.DataFrame(rows, columns=[
-        "year", "name", "driver", "race_id", "grand_prix_id", 
+        "year", "name", "driver", "driver_code", "race_id", "grand_prix_id", 
         "position_text", "time", "time_millis", "laps", "course_length", 
         "race_pace_per_lap_millis", "constructor_id"  
     ])
@@ -370,52 +248,17 @@ def get_position_flow_data(selected_year, selected_driver_id):
     if not selected_driver_id:
         return pd.DataFrame()
     
-    print(f"Debug: Querying position flow for year {selected_year}, driver {selected_driver_id}")
     
     with sqlite3.connect(DB_PATH_1) as conn:
         cur = conn.cursor()
         cur.execute("PRAGMA table_info(race_result)")
         columns = cur.fetchall()
-        print("Columns in race_result:", [col[1] for col in columns])
     
->>>>>>> origin/master
     query = f"""
         SELECT
             r.year,
             d.name AS driver_name,
             d.last_name AS driver,
-<<<<<<< HEAD
-            grid.position_text AS grid_position_text,
-            result.position_text AS position_text
-        FROM race_data AS result
-        JOIN race r ON result.race_id = r.id
-        JOIN driver d ON result.driver_id = d.id
-        JOIN constructor c ON result.constructor_id = c.id
-        JOIN race_data AS grid
-          ON grid.race_id = result.race_id
-         AND grid.driver_id = result.driver_id
-         AND grid.type = 'STARTING_GRID_POSITION'
-        WHERE r.year = ?
-          AND result.driver_id = ?              -- 🔺 đổi dòng này
-          AND result.type = 'RACE_RESULT'
-          AND result.position_text NOT IN ('DNF','DNS','DNQ','DSQ','NC')
-    
-        ORDER BY r.date;
-    """
-    # -- AND ({CONSTRUCTOR_FILTER})
-    with sqlite3.connect(DB_PATH_2) as conn:
-        df = pd.read_sql_query(query, conn, params=(selected_year, selected_driver_id))
-    return df
-
-
-
-
-# 5 Cards: data
-
-# 6 year-dropdown option: data
-
-# 7 GP-dropdown option: data
-=======
             rr.grid_position_text AS grid_position_text,
             rr.position_text AS position_text
         FROM race_result AS rr
@@ -425,15 +268,9 @@ def get_position_flow_data(selected_year, selected_driver_id):
         WHERE r.year = ?
           AND rr.driver_id = ?
           AND rr.position_text NOT IN ('DNF','DNS','DNQ','DSQ','NC')
-          AND ({CONSTRUCTOR_FILTER})
         ORDER BY r.date;
     """
     with sqlite3.connect(DB_PATH_1) as conn:
         df = pd.read_sql_query(query, conn, params=(selected_year, selected_driver_id))
     
-    print(f"Debug: Retrieved {len(df)} rows for position flow")
-    if not df.empty:
-        print(f"Debug: Sample data: {df.head()}")
-    
     return df
->>>>>>> origin/master

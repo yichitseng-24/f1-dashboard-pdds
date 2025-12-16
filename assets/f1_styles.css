@@ -1,24 +1,20 @@
-/* 引入 regular 字重 */
+/* 引入 regular  */
 @font-face {
     font-family: 'Formula1Font';
-    /* ⭐ 自定義這個名稱，稍後在 font-family 中使用 */
     src: url('/assets/Formula1\ Regular-normal-400-100.ttf') format('truetype');
     font-weight: 400;
-    /* 對應的字重 */
     font-style: normal;
 }
 
-/* 引入 Medium 字重 */
+/* 引入 Medium */
 @font-face {
     font-family: 'Formula1Font';
-    /* ⭐ 自定義這個名稱，稍後在 font-family 中使用 */
     src: url('/assets/Formula1\ Medium-normal-700-100.ttf') format('truetype');
     font-weight: 700;
-    /* 對應的字重 */
     font-style: normal;
 }
 
-/* 引入 Black 字重 */
+/* 引入 Black  */
 @font-face {
     font-family: 'Formula1Font';
     /* ⭐ 自定義這個名稱，稍後在 font-family 中使用 */
@@ -107,28 +103,21 @@ body {
 
 }
 
-/* 左欄（內容區） */
+
 #main-container-left {
     flex: 1;
-    /* Takes remaining space */
     padding: 20px;
     overflow-y: auto;
-    /* Allow scrolling if content is too long */
     min-width: 0;
-    /* Allows flex item to shrink below content size */
 }
 
 
-/* 右欄（側邊欄） */
+
 #main-container-right {
     width: 350px;
-    /* 固定 sidebar 寬 */
     min-width: 280px;
-    /* Minimum width on small screens */
     overflow-y: auto;
-    /* Allow scrolling if content is too long */
     flex-shrink: 0;
-    /* 不要被擠壓 */
 }
 
 .content-area {
@@ -170,27 +159,23 @@ body {
     padding: 0;
 }
 
-/* 鎖定選項列表的容器 (menu) */
 .year-dropdown-dash-wrap .Select-menu-outer {
     background-color: #3f3f3f;
     color: white;
     font-size: 14px;
     border: 1px solid #555;
     z-index: 100;
-    /* 確保它在其他元素之上 */
     padding: 0;
 }
 
 .year-dropdown-dash-wrap .Select-option {
     background-color: transparent;
-    /* 預設背景透明 */
     color: white;
     padding: 10px 20px;
 }
 
 .year-dropdown-dash-wrap .Select-option:hover {
     background-color: #4a4a4a;
-    /* 懸停時變深 */
     color: white;
 }
 
@@ -319,16 +304,15 @@ body {
 
 .driver-checkbox input[type="checkbox"] {
     accent-color: #e10600;
-    /* 應用 F1 紅色 */
     width: 18px;
     height: 18px;
     cursor: pointer;
 }
 
 
-/* highlight 前幾名 */
+/* highlight points top5 */
 .driver-row-top5 {
-    background-color: rgba(174, 214, 240, 0.12);
+    background-color: rgba(150, 239, 255, 0.12);
 }
 
 

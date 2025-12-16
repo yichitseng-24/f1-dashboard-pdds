@@ -105,10 +105,8 @@ def create_nvr_figure(selected_year, selected_drivers):
     if df.empty:
         return no_data_fig
     
-    # 穩定性計算 (與原邏輯相同)
     df['stability'] = 1 - df['nvr']
     
-    # 排序並獲取排序後的車手列表
     df_sorted = df.sort_values(by='stability', ascending=False)
     current_drivers = df_sorted['driver'].tolist()
     team_colors = [
@@ -301,7 +299,7 @@ def visualize_position_flow_chart(df):
         & df["grid_position_text"].str.isdigit()
         & df["position_text"].str.isdigit()
     )
-    df = df[filter_mask].copy() # 建立單一副本
+    df = df[filter_mask].copy()
 
     if df.empty:
         fig = go.Figure()
@@ -341,17 +339,21 @@ def visualize_position_flow_chart(df):
     source = [start_index[s] for s in flow["start"]]
     target = [finish_index[f] for f in flow["finish"]]
     values = flow["size"].tolist()
-    colors =[
-       ("#6592fb", "rgba(101,146,251,0.35)"), 
-       ("#0093ca", "rgba(0,147,202,0.35)"),    
-       ("#199972", "rgba(25,153,114,0.35)"),   
-       ("#f58020", "rgba(245,128,32,0.35)"),   
-       ("#e12020", "rgba(225,32,32,0.35)"),  
-       ("#405dff", "rgba(64,93,255,0.35)"),
-    ]
+    
+    COLOR_UP = "rgba(46,204,113,0.40)"     # green: finish < start
+    COLOR_SAME = "rgba(176,176,176,0.40)"  # gray: finish == start
+    COLOR_DOWN = "rgba(231,76,60,0.40)"    # red: finish > start
 
-    node_colors = [colors[i % len(colors)][0] for i in range(len(labels))]
-    link_colors = [colors[start_index[s] % len(colors)][1] for s in flow["start"]]
+    link_colors = []
+    for s, f in zip(flow["start"], flow["finish"]):
+        if f < s:
+            link_colors.append(COLOR_UP)
+        elif f == s:
+            link_colors.append(COLOR_SAME)
+        else:
+            link_colors.append(COLOR_DOWN)
+    
+    node_colors = ["#828282"] * len(labels)
 
     fig = go.Figure(
         go.Sankey(
@@ -376,15 +378,15 @@ def visualize_position_flow_chart(df):
         margin=dict(l=30, r=30, b=30, t=60, pad=4),
         annotations=[
             dict(
-                x=-0.01,  # 設置 X 座標 (圖表最左側之外一點)
-                y=1.1,    # 設置 Y 座標 (圖表垂直居中)
-                text='Start', # 您想顯示的文字標籤
-                showarrow=False,  # 不顯示箭頭
-                xref="paper",     # 參考整個圖表紙張區域
-                yref="paper",     # 參考整個圖表紙張區域
+                x=-0.01, 
+                y=1.1,    
+                text='Start', 
+                showarrow=False, 
+                xref="paper",   
+                yref="paper",     
                 font=dict(size=15, color="gray"),
             ),
-            # 您也可以添加第二個標籤給終點側 (Finish)
+            
             dict(
                 x=1.01,
                 y=1.1,

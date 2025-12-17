@@ -65,7 +65,7 @@ def get_sidebar(tab_id, selected_year, stored_drivers):
         except:
             df_drivers = pd.DataFrame({'Team_Code': ['---'], 'Driver_Name': ['---'], 'Points': ['---']})
             
-        sidebar = layouts.create_driver_list_panel(df_drivers, stored_drivers)
+        sidebar = layouts.create_driver_list_panel(df_drivers, stored_drivers, tab_id)
         
     elif tab_id == 'position-flow-stability':
         sidebar = layouts.create_summary_cards()
@@ -133,22 +133,7 @@ def update_main_figure(tab_id, year, drivers, driver):
         return charts.visualize_position_flow_chart(df)
     
     return go.Figure()
-""""
-# 5 Update checkbox values when store changes
-@app.callback(
-    Output({'type': 'driver-checkbox', 'index': ALL}, 'value'),
-    Input('selected-drivers-store', 'data'),
-    State({'type': 'driver-checkbox', 'index': ALL}, 'id')
-)
-def update_checkbox_values(selected_drivers, checkbox_ids):
-    checkbox_values = []
-    for checkbox_id in checkbox_ids:
-        driver_id = checkbox_id['index']
-        if driver_id in selected_drivers:
-            checkbox_values.append([driver_id])
-        else:
-            checkbox_values.append([])
-    return checkbox_values"""
+
 
 # 6 Update dropdown container based on tab
 # try here

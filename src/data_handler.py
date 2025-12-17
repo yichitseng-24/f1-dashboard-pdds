@@ -6,23 +6,12 @@ import numpy as np
 # 1. Database Path - using relative paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH_1 = os.path.join(BASE_DIR, 'data', 'f1_1.db')
-DB_PATH_2 = os.path.join(BASE_DIR, 'data', 'f1_2.db')
 
 
 # for db1
 def query_db(sql, args=(), one=False):
     """Execute a read-only query and return rows as dict-like objects."""
     conn = sqlite3.connect(DB_PATH_1)   
-    conn.row_factory = sqlite3.Row
-    cur = conn.execute(sql, args)
-    rows = cur.fetchall()
-    conn.close()
-    return (rows[0] if rows else None) if one else rows
-
-# for db2
-def query_db2(sql, args=(), one=False):
-    """Execute a read-only query and return rows as dict-like objects."""
-    conn = sqlite3.connect(DB_PATH_2)   
     conn.row_factory = sqlite3.Row
     cur = conn.execute(sql, args)
     rows = cur.fetchall()

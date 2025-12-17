@@ -48,7 +48,7 @@ TEAM_COLORS = {
 
 # 2 Driver Selection Table
 # 2.1 Driver Selection Table: table layout
-def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
+def create_driver_table_rows(tab_id, df: pd.DataFrame, selected_driver_ids=None):
     # In order to remember those selected between tabs
     header_row = html.Thead(children=[
         html.Tr(children=[
@@ -72,7 +72,11 @@ def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
         else:
             value = [driver_id] if driver_id in selected_driver_ids else []
         
-        row_class = 'driver-row driver-row-top5' if index < 5 else 'driver-row'
+        # hightlight the top 5 drivers in the first page
+        row_class = 'driver-row'
+        if tab_id == 'ranking-evolution' and index < 5:
+            row_class = 'driver-row driver-row-top5'
+        
         table_body.append(
             html.Tr(
                 className=row_class, 
@@ -97,7 +101,7 @@ def create_driver_table_rows(df: pd.DataFrame, selected_driver_ids=None):
     return [html.Table(className='driver-table', children=[header_row, html.Tbody(table_body)])]
 
 # 2.2 Driver Selection Table: table container layout
-def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
+def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids, tab_id):
     # Create right-side layout
     return html.Aside(
         className='driver-list-panel',
@@ -143,7 +147,7 @@ def create_driver_list_panel(df_drivers: pd.DataFrame, selected_driver_ids):
             html.Hr(className='separator-line'),
 
             # Driver table
-            html.Div(id='dynamic-driver-table-container', children=create_driver_table_rows(df_drivers, selected_driver_ids))
+            html.Div(id='dynamic-driver-table-container', children=create_driver_table_rows(tab_id, df_drivers, selected_driver_ids))
         ]
     )
 
@@ -197,14 +201,13 @@ def create_summary_cards():
         
     return html.Aside(
         id='tab-4-sidebar',
-        #className='driver-list-panel', # 沿用之前的側邊欄容器樣式
+        #className='driver-list-panel', 
         children=html.Div(cards, style={"padding": "10px"})
     )
 
 # 4 Right-side content
 # 4.1 Right-side content : Top (Title + Dropdowns)
 def create_content_area_top(tab_id, current_year):
-    """根據選中的 Tab ID 渲染不同的內容佈局"""
     # get dynamic titles
     title, subtitle = get_tab_titles(tab_id) 
 

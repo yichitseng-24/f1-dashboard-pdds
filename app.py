@@ -257,6 +257,12 @@ def update_improvement_card(selected_driver, selected_year):
 
 
 
-# Run app
+# # Run app
+# if __name__ == '__main__':
+#     app.run(debug=True, port=8050)
+
+
+server = app.server
+
 if __name__ == '__main__':
-    app.run(debug=True, port=8050)
+    app.run_server(debug=False)

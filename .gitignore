@@ -4,10 +4,10 @@ __pycache__/
 *.pyc
 
 # Dash / Plotly / Data Files
-data/*.db      # 忽略數據庫檔案 (如果它們在 data/ 資料夾中且不應版本控制)
-data/*.sqlite
+# data/*.db       <-- DELETE THIS LINE
+# data/*.sqlite   <-- DELETE THIS LINE
 .ipynb_checkpoints/
-*.csv          # 忽略大的臨時 CSV 檔案
+*.csv           
 
 # IDE and OS
 .DS_Store
@@ -15,6 +15,4 @@ data/*.sqlite
 
 # 確保 src/ 下的快取也被忽略
 src/__pycache__/
-data/
-
-
+# data/           <-- DELETE THIS LINE (Very Important)

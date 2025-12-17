@@ -9,6 +9,8 @@ import pandas as pd
 import numpy as np
 import src.data_handler as data_handler
 import src.chart as charts
+import os
+
 
 # Import font 'Inter'
 external_stylesheets = [ 
@@ -262,7 +264,10 @@ def update_improvement_card(selected_driver, selected_year):
 #     app.run(debug=True, port=8050)
 
 
+
 server = app.server
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    # Get port from environment variable or use 8050 for local development
+    port = int(os.environ.get("PORT", 8050))
+    app.run_server(debug=False, host='0.0.0.0', port=port)

@@ -156,10 +156,10 @@ def create_summary_cards():
     # To create right-side cards for Tab 4
 
     card_types = [ 
-        {"key":"points","title": "Season Points","icon":"point_icon"},
-        {"key":"stability","title": "Stability","icon":"stability_icon"},
-        {"key":"pace","title": "Race Pace","icon":"pace_icon"},
-        {"key":"improvement", "title":"Improvement Rate", "icon":"improve_icon"}
+        {"key":"points","title": "Total Points","icon":"point_icon"},
+        {"key":"stability","title": "Driver Stability","icon":"stability_icon"},
+        {"key":"pace","title": "Pace Stability","icon":"pace_icon"},
+        {"key":"improvement", "title":"Position Improvement Rate", "icon":"improve_icon"}
     ]
     cards = []
     for data in card_types:

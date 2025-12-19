@@ -340,9 +340,9 @@ def visualize_position_flow_chart(df):
     target = [finish_index[f] for f in flow["finish"]]
     values = flow["size"].tolist()
     
-    COLOR_UP = "rgba(46,204,113,0.40)"     # green: finish < start
-    COLOR_SAME = "rgba(176,176,176,0.40)"  # gray: finish == start
-    COLOR_DOWN = "rgba(231,76,60,0.40)"    # red: finish > start
+    COLOR_UP ="rgba(46,204,113,0.40)"   # green: finish < start
+    COLOR_SAME = "rgba(176,176,176,0.40)"  # grey: finish == start
+    COLOR_DOWN = "rgba(231,76,60,0.40)"   # red: finish > start
 
     link_colors = []
     for s, f in zip(flow["start"], flow["finish"]):
@@ -375,7 +375,7 @@ def visualize_position_flow_chart(df):
         font=dict(size=14),
         paper_bgcolor="white",
         plot_bgcolor="white",
-        margin=dict(l=30, r=30, b=30, t=60, pad=4),
+        margin=dict(l=30, r=30, b=80, t=60, pad=4),
         annotations=[
             dict(
                 x=-0.01, 
@@ -395,6 +395,37 @@ def visualize_position_flow_chart(df):
                 xref="paper",
                 yref="paper",
                 font=dict(size=15, color="gray")
+            ),
+            # Legend annotations
+            dict(
+                x=0.2,
+                y=-0.15,
+                text='<span style="color:#82E0AA;">●</span> Positions Gained',
+                showarrow=False,
+                xref="paper",
+                yref="paper",
+                font=dict(size=18),
+                align='left'
+            ),
+            dict(
+                x=0.52,
+                y=-0.15,
+                text='<span style="color:#808080;">●</span> Position Unchanged',
+                showarrow=False,
+                xref="paper",
+                yref="paper",
+                font=dict(size=18),
+                align='center'
+            ),
+            dict(
+                x=0.82,
+                y=-0.15,
+                text='<span style="color:#FF0000;">●</span> Positions Lost',
+                showarrow=False,
+                xref="paper",
+                yref="paper",
+                font=dict(size=18),
+                align='right'
             )
         ]
     )
